@@ -1,0 +1,157 @@
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+
+
+    p,
+    td,
+    div,
+    li,
+    span {
+        font-family: 'Times New Roman', Times, serif;
+        font-size: 12pt;
+    }
+
+    h1,
+    h2,
+    p,
+    h4,
+    h5,
+    h6 {
+        font-family: 'Times New Roman', Times, serif;
+    }
+
+    span.right {
+        float: right;
+    }
+
+    span.ref {
+        color: blue;
+        font-size: 10pt;
+        float: right;
+    }
+
+    p.heading {
+        font-size: 14pt;
+        font-weight: bold;
+    }
+</style>
+
+<div>
+    <p class='heading'>INPUTS:</p>
+    <table>
+        <tr>
+            <td> Component Type </td>
+            <td>: PIPE </td>
+        </tr>
+        <tr>
+            <td>Location</td>
+            <td>: {{location}} </td>
+        </tr>
+        <tr>
+            <td>Material</td>
+            <td>: {{material}} </td>
+        </tr>
+        <tr>
+            <td> Design/Maximum Pressure (P) </td>
+            <td>: {{P}} MPA </td>
+        </tr>
+        <tr>
+            <td> Outer Diameter (OD) </td>
+            <td>: {{OD}} mm </td>
+        </tr>
+        <tr>
+            <td> Weld Joint Efficiency </td>
+            <td>: {{E}} MPA </td>
+        </tr>
+        <tr>
+            <td> Nominal Thickness (t<sub>nom</sub>) </td>
+            <td>: {{tnom}} mm </td>
+        </tr>
+        <tr>
+            <td> Minimum Measured Thickness (t <sub>mm</sub>) in LTA </td>
+            <td>: {{tmm}} mm </td>
+        </tr>
+        <tr>
+            <td> Minimum Measured Thickness (t <sub>rd</sub>) Away from LTA </td>
+            <td>: {{trd}} mm </td>
+        </tr>
+        <tr>
+            <td> Operating Years </td>
+            <td>: {{years}} Years </td>
+        </tr>
+    </table>
+    <p class='heading'>ASSESSMENT:</p>
+    <ul>
+        <li>
+            ALLOWABLE STRESS(S) AT MAX TEMP : {{S}} MPA
+        </li>
+        <li>
+            FUTURE CORROSION ALLOWANCE : {{FCA}} mm
+        </li>
+        <li>
+            Wall thickness to be used in the assessment: <br />
+            t<sub>c</sub> = t <sub>rd</sub> - FCA = {{tc}}
+        </li>
+        <li>
+            Determination of the remaining thickness ratio (R<sub>t</sub>) and the longitudinal flaw length parameter
+            (λ): <br />
+            R<sub>t</sub> = (t <sub>mm</sub> - FCA ) / t<sub>c</sub> = {{Rt}} <br />
+            λ = 1.285*s / √(D*t<sub>c</sub>) = {{ λ}}
+        </li>
+        <li>
+            Checking the limiting flaw size criteria: <br />
+            R<sub>t</sub> > 0.2 = {{ Rt > 0.2 }} <br />
+            t<sub>mm</sub> - FCA > 1.3 = {{ tmm-FCA > 1.3 }} <br />
+        </li>
+
+        {# {% if eos_ver >= 4.22 -%}
+        Detected EOS ver {{ eos_ver }}, using new command syntax.
+        {% else -%}
+        Detected EOS ver {{ eos_ver }}, using old command syntax.
+        {% endif %} #}
+
+        <li>
+            Determination of the MAWP for the component: <br />
+            MAWP = (2 * S * E * t<sub>mm</sub>) /(OD - 2 * Y * t<sub>mm</sub>) = {{ MAWP }} MPA <br />
+        </li>
+        <li>
+            Determination of Folias Factor M<sub>t</sub>: <br />
+            M<sub>t</sub> = {{Mt}} <span class="ref">Refer Table 5.2, API-579, 2016</span>
+        </li>
+        <li>
+            Determination of remaining strength Factor RSF: <br />
+            RSF = {{RSF}} <span class="ref">Refer para 5.12, API-579, 2016</span>
+        </li>
+
+        <li>
+            Determination of reduced maximum allowable working pressure (MAWP<sub>r</sub>) for RSF: <br />
+            MAWP<sub>r</sub> = {{MAWPr}} MPA <span class="ref">Refer Part 2, paragraph 2.4.2.2, API-579, 2016</span>
+        </li>
+        <li style="font-weight: bold;background-color:#e7e7e7">
+           Level-1 Result:  {{level1result}}
+        </li>
+    </ul>   
+
+    {% if life -%}
+
+    <p class='heading'>REMAINNING LIFE ASSESSMENT:</p>
+    <ul>
+        <li>
+            Minimum requred thickness (t<sub>min</sub>):
+            t<sub>min</sub> = {{tmin}} mm <span class="ref">Refer paragraph 2C.3.3, API-579, 2016</span>
+        </li>
+        <li>
+            Thinning Rate = {{crate}} mm/year
+        </li>
+        <li>
+            Remainning Life: {{life}} Years
+        </li>
+
+    </ul>
+    {% endif %}
+
+</div>
